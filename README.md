@@ -33,6 +33,29 @@ Depending on your compiler, this will automatically create 3 symbols in the obje
 
 You can use `ld_magic.h` for a cross platform way to access this data from your C code.
 
+After the object file is generated, you should see the patched esbuild output if you run `strings`:
+
+```bash
+% strings foo_lib_js.o
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __commonJS = (cb, mod) => function __require() {
+  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+// src/foo.js
+var require_foo = __commonJS({
+  "src/foo.js"(exports, module) {
+    function foo(bar, baz) {
+      return bar + baz;
+    }
+    module.exports = foo;
+//export default require_foo();
+_binary_my_foo_lib_mjs_end
+_binary_my_foo_lib_mjs_start
+_binary_my_foo_lib_mjs_size
+.symtab
+.strtab
+.shstrtab
+.data
+```
 5. Link the object file into your binary:
 ```bash
 gcc my_obj_file.o <other object files> -o my_static_binary
@@ -50,10 +73,12 @@ The source of this repo shows how to do this with a CMake project.
 Let's say you have a NodeJS library with a function you want to call from C:
 
 ```js
-// Let's say this lives in my-lib-foo.js, and esbuild output goes in my-lib-foo.mjs
+// Let's say this lives in foo.js, and esbuild output goes in my-lib-foo.mjs
 function foo(bar, baz) {
     return bar + baz
 }
+
+module.exports = foo;
 ```
 
 `esbuild` creates a series of `require_thing()` functions, which can be used to get the underlying `thing(param1, param2...)` function object which you can make calls with.
@@ -177,7 +202,9 @@ int call_foo(int bar, int baz)
 
     int32_t c_result = -1;
 
-    return JS_ToInt32(ctx, &c_result, js_result);
+    JS_ToInt32(ctx, &c_result, js_result);
+
+    return c_result;
        
 }
 ```
@@ -185,7 +212,7 @@ int call_foo(int bar, int baz)
 ## Why should anyone do this?
 I'm doing this to add support for [a popular open source glucose control algorithm](https://github.com/OpenAPS/oref0) into a clinical glucose simulator, to see how state of the art controllers perform against it. Since OpenAPS is a fairly active project, and the simulator is written in C++, the two options for using it were:
 
-1. Reimplement OpenAPS in C++ (costly in time, error prone)
+1. Reimplement OpenAPS in C++ (costly in time, error prone, liable to fall behind future changes)
 2. Transpile it to C++ (nothing exists that I could find easily)
 
 So if you have a popular NodeJS library you want to integrate into some sort of native application that's not written using Electron, that's the use case I see this process covering.
