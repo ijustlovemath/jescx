@@ -161,6 +161,7 @@ int call_foo(int bar, int baz)
     /**
      * To create more complex objects as arguments, use 
      *   JS_ParseJSON(ctx, json_str, strlen(json_str), "<input>");
+     * You can also pass callback functions by loading them just like we loaded foo_fn
      */
     JSValue args[] = {
         JS_NewInt32(ctx, 5),
@@ -195,3 +196,12 @@ Make sure you're only applying this process to source you have an appropriate li
 Conceivably you could use MinGW64 on Windows to have a similar build process, but that's outside my use case, so I haven't invested much time into it. Similarly, I don't have a Mac to test on.
 
 If you want to submit a PR for how you implemented this with your platform, feel free!
+
+## Build Instructions
+To have cmake generate makefiles for you, you need to create the object file first, then subsquent times it will generate for you
+
+```bash
+
+# run from your build directory, then run cmake ..
+ld -r -b binary -o foo_lib_js.o ../src/my-foo-lib.mjs
+```
