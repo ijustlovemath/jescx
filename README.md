@@ -189,8 +189,8 @@ int call_foo(int bar, int baz)
      * You can also pass callback functions by loading them just like we loaded foo_fn
      */
     JSValue args[] = {
-        JS_NewInt32(ctx, 5),
-        JS_NewInt32(ctx, 3)
+        JS_NewInt32(ctx, bar),
+        JS_NewInt32(ctx, baz)
     };
 
     JSValue js_result = JS_Call(ctx
