@@ -1,6 +1,6 @@
 ## Calling JavaScript from C
 
-When you search for "How to call JavaScript from C/C++", you'll find tons of results about how to write JS modules in C, and call them from your Node environment, but almost nothing for the reverse direction. Often times, you'll hear the reason is that "JavaScript is too complex to be used from C", and to extent, that's true. But if you don't mind building (relatively) big binaries, and you have a pretty good understanding of the data types required and returned by your there is a way to bundle all of the functionality from your favorite Node.JS libraries into a native library.
+When you search for "How to call JavaScript from C/C++", you'll find tons of results about how to write JS modules in C, and call them from your Node environment, but almost nothing for the reverse direction. Often times, you'll hear the reason is that "JavaScript is too complex to be used from C", and to extent, that's true. But if you don't mind building (relatively) big binaries, and you have a pretty good understanding of the data types required and returned by the library, you can use QuickJS and esbuild to bundle all of the functionality from your favorite Node.JS libraries into a native library, a static binary, etc.
 
 ## How it works (Linux only)
 
