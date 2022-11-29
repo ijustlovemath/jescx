@@ -1,8 +1,8 @@
-## Calling JavaScript from C
+## Calling JavaScript from C/C++ using QuickJS and esbuild
 
 When you search for "How to call JavaScript from C/C++", you'll find tons of results about how to write JS modules in C, and call them from your Node environment, but almost nothing for the reverse direction. Often times, you'll hear the reason is that "JavaScript is too complex to be used from C", and to extent, that's true. But if you don't mind building (relatively) big binaries, and you have a pretty good understanding of the data types required and returned by the library, you can use QuickJS and esbuild to bundle all of the functionality from your favorite Node.JS libraries into a native library, a static binary, etc.
 
-## How it works (Linux only)
+## How it works (Linux only, for now)
 
 To call JS from C, the general process is:
 
@@ -63,7 +63,7 @@ gcc my_obj_file.o <other object files> -o my_static_binary
 
 You can also link the object file into a shared library, for use in other applications:
 ```bash
-gcc -shared -o my_shared_library.so my_obj_file.o  <other object files>`
+gcc -shared -o my_shared_library.so my_obj_file.o  <other object files>
 ```
 
 The source of this repo shows how to do this with a CMake project.
